@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Guía de Usuario — BolsaGT</title>
+<style>
+  :root {
+    --bg: #0a0e14;
+    --bg-soft: #10151c;
+    --card: #141b24;
+    --border: #223040;
+    --teal: #1abc9c;
+    --teal-soft: #16a08533;
+    --text: #e8ecf1;
+    --text-soft: #9aa4b2;
+    --gain: #2ecc71;
+    --loss: #e74c3c;
+    --amber: #e6a23c;
+    --blue: #7c9cff;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text); font-family: "Segoe UI", system-ui, Arial, sans-serif; line-height: 1.6; }
+  a { color: var(--teal); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .layout { display: flex; min-height: 100vh; }
+  nav.sidebar { width: 270px; background: var(--bg-soft); border-right: 1px solid var(--border); padding: 24px 16px; position: sticky; top: 0; height: 100vh; overflow-y: auto; flex-shrink: 0; }
+  nav.sidebar h1 { font-size: 17px; color: var(--teal); margin: 0 8px 4px; }
+  nav.sidebar p.tag { font-size: 12px; color: var(--text-soft); margin: 0 8px 20px; }
+  nav.sidebar a.nav-link { display: block; padding: 8px 12px; border-radius: 8px; color: var(--text-soft); font-size: 13px; margin-bottom: 2px; }
+  nav.sidebar a.nav-link:hover { background: #1a2330; color: var(--text); text-decoration: none; }
+  nav.sidebar a.nav-link.active { background: var(--teal-soft); color: var(--teal); font-weight: 600; }
+  .back-link { display: inline-flex; align-items: center; gap: 6px; margin: 0 8px 20px; font-size: 13px; color: var(--text-soft); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; }
+  .back-link:hover { color: var(--teal); border-color: var(--teal); text-decoration: none; }
+  main { flex: 1; max-width: 980px; padding: 48px 56px 100px; }
+  header.hero { margin-bottom: 40px; padding-bottom: 26px; border-bottom: 1px solid var(--border); }
+  header.hero .badge { display: inline-block; background: var(--teal-soft); color: var(--teal); font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 20px; margin-bottom: 14px; letter-spacing: .03em; }
+  header.hero h1 { font-size: 32px; margin: 0 0 10px; }
+  header.hero p { color: var(--text-soft); font-size: 15px; margin: 0; max-width: 760px; }
+  section.chapter { margin-bottom: 52px; scroll-margin-top: 24px; }
+  section.chapter h2 { font-size: 22px; color: var(--text); display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  section.chapter h2 .num { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 8px; background: var(--teal); color: #05201a; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+  section.chapter > p.lead { color: var(--text-soft); margin-top: 4px; margin-bottom: 18px; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; margin-bottom: 16px; }
+  .card h3 { margin: 0 0 10px; font-size: 15px; color: var(--teal); }
+  .card h4 { margin: 18px 0 8px; font-size: 14px; color: var(--blue); }
+  ol.steps { margin: 0; padding-left: 0; list-style: none; counter-reset: step; }
+  ol.steps li { counter-increment: step; position: relative; padding-left: 40px; margin-bottom: 14px; color: var(--text-soft); font-size: 14.5px; }
+  ol.steps li::before { content: counter(step); position: absolute; left: 0; top: -1px; width: 26px; height: 26px; border-radius: 50%; background: #1a2330; border: 1px solid var(--teal); color: var(--teal); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  ol.steps li strong { color: var(--text); }
+  ul.bullets { margin: 0; padding-left: 20px; color: var(--text-soft); font-size: 14.5px; }
+  ul.bullets li { margin-bottom: 8px; }
+  ul.bullets li strong { color: var(--text); }
+  table.tbl { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+  table.tbl th, table.tbl td { padding: 10px 12px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; }
+  table.tbl th { color: var(--text-soft); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .03em; }
+  table.tbl td { color: var(--text); }
+  table.tbl tr:last-child td { border-bottom: none; }
+  .pill { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .pill.buy, .pill.up, .pill.call, .pill.ok { background: #2ecc7122; color: var(--gain); }
+  .pill.sell, .pill.down, .pill.put, .pill.high { background: #e74c3c22; color: var(--loss); }
+  .pill.info { background: #7c9cff22; color: var(--blue); }
+  .note { display: flex; gap: 12px; background: #1a2330; border: 1px solid var(--border); border-left: 3px solid var(--amber); border-radius: 8px; padding: 14px 16px; font-size: 13.5px; color: var(--text-soft); margin-top: 14px; }
+  .note strong { color: var(--amber); }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .mini-card { background: #101720; border: 1px solid var(--border); border-radius: 10px; padding: 15px; }
+  .mini-card strong { display: block; color: var(--teal); margin-bottom: 5px; }
+  .mini-card span { color: var(--text-soft); font-size: 13px; }
+  .code-like { background: #0b1118; border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; color: #cbd5e1; font: 12px/1.6 "IBM Plex Mono", Consolas, monospace; overflow-x: auto; }
+  .checklist { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 18px; }
+  .checklist div { color: var(--text-soft); font-size: 13.5px; }
+  .checklist div::before { content: "✓"; color: var(--gain); font-weight: 700; margin-right: 8px; }
+  footer { text-align: center; color: var(--text-soft); font-size: 12.5px; padding: 30px; border-top: 1px solid var(--border); }
+  @media (max-width: 900px) { nav.sidebar { display: none; } main { padding: 32px 20px 80px; } }
+  @media (max-width: 700px) { .grid2, .grid3, .checklist { grid-template-columns: 1fr; } table.tbl { display: block; overflow-x: auto; white-space: normal; } }
+</style>
+</head>
+<body>
+<div class="layout">
+  <nav class="sidebar">
+    <h1>BolsaGT</h1>
+    <p class="tag">Guía oficial de usuario</p>
+    <a class="back-link" href="index.html">← Volver al sistema</a>
+    <a class="nav-link" href="#intro">Introducción</a>
+    <a class="nav-link" href="#acceso">1. Acceso y estado inicial</a>
+    <a class="nav-link" href="#dashboard">2. Mercado y watchlist</a>
+    <a class="nav-link" href="#compraventa">3. Comprar y vender</a>
+    <a class="nav-link" href="#opciones">4. Opciones</a>
+    <a class="nav-link" href="#blitz">5. Blitz</a>
+    <a class="nav-link" href="#portafolio">6. Portafolio</a>
+    <a class="nav-link" href="#analitica">7. Analítica y escenarios</a>
+    <a class="nav-link" href="#decisiones">8. Bitácora</a>
+    <a class="nav-link" href="#historial">9. Historial</a>
+    <a class="nav-link" href="#reportes">10. Informe PDF y DOCX</a>
+    <a class="nav-link" href="#persistencia">11. Guardado y reinicio</a>
+    <a class="nav-link" href="#consejos">12. Buenas prácticas</a>
+  </nav>
+
+  <main>
+    <header class="hero" id="intro">
+      <span class="badge">GUÍA OFICIAL · BOLSAGT</span>
+      <h1>Guía de Usuario</h1>
+      <p>BolsaGT es una plataforma educativa para simular decisiones de inversión con datos de mercado generados por un motor interno. La versión actual comienza con <strong style="color:#fff">US$50,000.00</strong> y carga una cartera académica diversificada de ETF, acciones y oro spot.</p>
+      <div class="note"><strong>Alcance:</strong> esta guía explica el uso de la plataforma, la estrategia inicial, el registro de decisiones, los escenarios y la generación del informe. Todos los precios y escenarios son simulados; no constituyen cotizaciones ejecutables, pronósticos ni asesoría financiera.</div>
+    </header>
+
+    <section class="chapter" id="acceso">
+      <h2><span class="num">1</span> Acceso y estado inicial</h2>
+      <p class="lead">La plataforma puede utilizarse en modo local o en modo institución, según la configuración definida por el instructor.</p>
+      <div class="grid2">
+        <div class="card"><h3>Modo local</h3><p style="color:var(--text-soft); font-size:14px; margin:0;">No requiere cuenta. El portafolio, las órdenes, las operaciones Blitz y la bitácora se guardan en el almacenamiento local del navegador utilizado.</p></div>
+        <div class="card"><h3>Modo institución</h3><p style="color:var(--text-soft); font-size:14px; margin:0;">Solicita autenticación y guarda el portafolio de cada estudiante en la cuenta institucional correspondiente. El estudiante debe utilizar el mismo acceso para recuperar su información.</p></div>
+      </div>
+      <div class="card">
+        <h3>Cartera académica inicial</h3>
+        <p style="color:var(--text-soft); font-size:14px;">Al iniciar una cuenta nueva o utilizar el botón <strong>Reiniciar</strong>, la plataforma carga la distribución base de la actividad:</p>
+        <table class="tbl">
+          <tr><th>Activo</th><th>Clase</th><th>Monto</th><th>Peso</th><th>Riesgo relativo</th></tr>
+          <tr><td>SPY</td><td>ETF del S&amp;P 500</td><td>US$20,000</td><td>40%</td><td>Medio</td></tr>
+          <tr><td>QQQ</td><td>ETF del Nasdaq-100</td><td>US$12,500</td><td>25%</td><td>Medio-alto</td></tr>
+          <tr><td>MSFT</td><td>Acción</td><td>US$7,500</td><td>15%</td><td>Medio-alto</td></tr>
+          <tr><td>JPM</td><td>Acción</td><td>US$5,000</td><td>10%</td><td>Medio</td></tr>
+          <tr><td>XAUUSD</td><td>Oro spot</td><td>US$5,000</td><td>10%</td><td>Medio</td></tr>
+          <tr><td><strong>Total</strong></td><td></td><td><strong>US$50,000</strong></td><td><strong>100%</strong></td><td></td></tr>
+        </table>
+      </div>
+      <div class="note"><strong>Importante:</strong> si la cuenta ya tenía datos de una versión anterior, el botón <strong>Reiniciar</strong> carga la cartera de US$50,000. Esta acción borra las posiciones, órdenes, apuestas e historial de la simulación actual.</div>
+    </section>
+
+    <section class="chapter" id="dashboard">
+      <h2><span class="num">2</span> Mercado y watchlist</h2>
+      <p class="lead">El panel principal reúne la cinta de precios, la lista de instrumentos, el gráfico y el ticket de órdenes.</p>
+      <div class="card">
+        <h3>Elementos principales</h3>
+        <div class="grid2">
+          <div class="mini-card"><strong>Cinta de precios</strong><span>Muestra símbolos, precio actual y variación del día en un desplazamiento continuo.</span></div>
+          <div class="mini-card"><strong>Watchlist</strong><span>Permite filtrar por Acciones, ETF, Commodities y Forex. Al seleccionar una fila se actualiza el gráfico y el ticket.</span></div>
+          <div class="mini-card"><strong>Encabezado de precio</strong><span>Presenta precio, variación porcentual y valores bid/ask utilizados por las órdenes.</span></div>
+          <div class="mini-card"><strong>Gráfico</strong><span>Representa velas generadas por el motor de simulación y se actualiza con el tiempo.</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Instrumentos disponibles</h3>
+        <table class="tbl">
+          <tr><th>Categoría</th><th>Ejemplos</th><th>Uso dentro de la estrategia</th></tr>
+          <tr><td>Acciones</td><td>AAPL, MSFT, JPM, NVDA</td><td>Exposición específica a empresas y sectores.</td></tr>
+          <tr><td>ETF</td><td>SPY, QQQ</td><td>Diversificación amplia o exposición temática.</td></tr>
+          <tr><td>Commodities</td><td>XAUUSD, WTI, BRENT</td><td>Exposición a materias primas y posibles coberturas.</td></tr>
+          <tr><td>Forex</td><td>EURUSD, USDGTQ, USDJPY</td><td>Exposición a movimientos de divisas.</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section class="chapter" id="compraventa">
+      <h2><span class="num">3</span> Comprar y vender</h2>
+      <p class="lead">Las operaciones de inversión se realizan desde el ticket que aparece junto al gráfico del instrumento seleccionado.</p>
+      <div class="card">
+        <ol class="steps">
+          <li>Selecciona una categoría y un instrumento en la <strong>watchlist</strong>.</li>
+          <li>Elige <span class="pill buy">Comprar</span> o <span class="pill sell">Vender</span>.</li>
+          <li>Selecciona <strong>Market</strong> para ejecutar al precio bid/ask actual o <strong>Limit</strong> para definir un precio máximo de compra o mínimo de venta.</li>
+          <li>Ingresa la cantidad de unidades y revisa el valor estimado de la operación.</li>
+          <li>Confirma la orden y revisa el resultado en Portafolio o Historial.</li>
+        </ol>
+      </div>
+      <div class="grid2">
+        <div class="card"><h3>Orden Market</h3><p style="color:var(--text-soft); font-size:14px; margin:0;">Se ejecuta inmediatamente al precio disponible. La compra utiliza el ask simulado y la venta utiliza el bid simulado.</p></div>
+        <div class="card"><h3>Orden Limit</h3><p style="color:var(--text-soft); font-size:14px; margin:0;">Permanece pendiente hasta que el precio simulado cruza el límite. Puede cancelarse desde la sección de órdenes abiertas.</p></div>
+      </div>
+      <div class="note"><strong>Regla:</strong> la plataforma opera en modalidad long-only. No permite ventas en corto ni apalancamiento. Las comisiones, impuestos y deslizamientos reales no forman parte del modelo actual.</div>
+    </section>
+
+    <section class="chapter" id="opciones">
+      <h2><span class="num">4</span> Trading de opciones</h2>
+      <p class="lead">El módulo de opciones permite negociar contratos CALL y PUT sobre determinados activos subyacentes.</p>
+      <div class="card">
+        <table class="tbl">
+          <tr><th>Elemento</th><th>Descripción</th></tr>
+          <tr><td><span class="pill call">CALL</span></td><td>Contrato que se beneficia si el precio del subyacente sube.</td></tr>
+          <tr><td><span class="pill put">PUT</span></td><td>Contrato que se beneficia si el precio del subyacente baja.</td></tr>
+          <tr><td>Strike</td><td>Precio de ejercicio definido en el contrato.</td></tr>
+          <tr><td>Vencimiento</td><td>Fecha en la que termina la vida del contrato.</td></tr>
+          <tr><td>Multiplicador</td><td>Cada contrato representa 100 unidades del subyacente.</td></tr>
+        </table>
+        <div class="note"><strong>Modelo:</strong> el precio se calcula con una versión simplificada de Black-Scholes utilizando precio del subyacente, strike, tiempo restante, tasa libre de riesgo y volatilidad asumida.</div>
+      </div>
+      <div class="card">
+        <h3>Flujo de operación</h3>
+        <ol class="steps">
+          <li>Selecciona un subyacente disponible para opciones.</li>
+          <li>Elige CALL o PUT y revisa strike, vencimiento y precio.</li>
+          <li>Define la cantidad de contratos.</li>
+          <li>Confirma una orden Market o Limit.</li>
+          <li>Revisa el multiplicador y el riesgo antes de confirmar.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="chapter" id="blitz">
+      <h2><span class="num">5</span> Operaciones Blitz</h2>
+      <p class="lead">Blitz es un módulo independiente de predicción cronometrada. No crea posiciones de inversión y no debe confundirse con la compra de un activo.</p>
+      <div class="card">
+        <ol class="steps">
+          <li>Selecciona un instrumento y la dirección <span class="pill up">Sube</span> o <span class="pill down">Baja</span>.</li>
+          <li>Define duración, inversión y porcentaje de pago.</li>
+          <li>Confirma la operación y observa el conteo regresivo.</li>
+          <li>Al vencer el tiempo, la operación se clasifica como ganada, perdida o empate según el precio de cierre.</li>
+          <li>También puedes cerrarla anticipadamente con un valor estimado de recompra.</li>
+        </ol>
+        <table class="tbl">
+          <tr><th>Duración</th><th>Payout si aciertas</th></tr>
+          <tr><td>15 segundos</td><td>75%</td></tr>
+          <tr><td>30 segundos</td><td>80%</td></tr>
+          <tr><td>1 minuto</td><td>85%</td></tr>
+          <tr><td>2 minutos</td><td>87%</td></tr>
+          <tr><td>5 minutos</td><td>90%</td></tr>
+        </table>
+      </div>
+      <div class="note"><strong>Riesgo alto:</strong> una operación Blitz puede perder el monto invertido en pocos segundos. El cierre anticipado es una estimación del motor y no equivale a una venta de mercado.</div>
+    </section>
+
+    <section class="chapter" id="portafolio">
+      <h2><span class="num">6</span> Portafolio y posiciones</h2>
+      <p class="lead">La vista Portafolio muestra el estado de la cuenta y sirve como punto de partida para el análisis académico.</p>
+      <div class="card">
+        <table class="tbl">
+          <tr><th>Indicador</th><th>Qué representa</th></tr>
+          <tr><td>Efectivo disponible</td><td>Capital que no está invertido en posiciones.</td></tr>
+          <tr><td>Valor en posiciones</td><td>Valor actual de mercado de los instrumentos abiertos.</td></tr>
+          <tr><td>Valor total</td><td>Efectivo más valor de las posiciones.</td></tr>
+          <tr><td>P&amp;L total</td><td>Diferencia entre el valor actual de la cuenta y el balance inicial.</td></tr>
+          <tr><td>P&amp;L del día</td><td>Variación diaria aproximada de los instrumentos no opcionales.</td></tr>
+          <tr><td>Detalle por posición</td><td>Símbolo, clase, cantidad, precio promedio, precio actual, valor de mercado y P&amp;L no realizado.</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h3>Cómo leer una posición</h3>
+        <p style="color:var(--text-soft); font-size:14px; margin:0;">El P&amp;L no realizado se calcula como la diferencia entre el precio actual y el precio promedio de compra, multiplicada por la cantidad. Una posición puede cambiar de valor aunque no se haya ejecutado una nueva orden, porque el motor actualiza los precios.</p>
+      </div>
+    </section>
+
+    <section class="chapter" id="analitica">
+      <h2><span class="num">7</span> Analítica y escenarios</h2>
+      <p class="lead">El panel de Analítica de cartera compara la estrategia planeada con el comportamiento actual y permite evaluar riesgos de forma didáctica.</p>
+      <div class="card">
+        <h3>Asignación objetivo versus real</h3>
+        <p style="color:var(--text-soft); font-size:14px;">La tabla compara el porcentaje objetivo de cada activo con el peso que realmente tiene dentro del valor total de la cuenta. La columna <strong>Desvío</strong> se expresa en puntos porcentuales.</p>
+        <table class="tbl">
+          <tr><th>Elemento</th><th>Interpretación</th></tr>
+          <tr><td>Objetivo</td><td>Porcentaje definido en la cartera académica inicial.</td></tr>
+          <tr><td>Real</td><td>Peso calculado con el valor de mercado actual.</td></tr>
+          <tr><td>Desvío</td><td>Diferencia entre porcentaje real y porcentaje objetivo.</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h3>Métricas de riesgo</h3>
+        <div class="grid3">
+          <div class="mini-card"><strong>Riesgo relativo</strong><span>Clasificación interna basada en concentración, tecnología y P&amp;L.</span></div>
+          <div class="mini-card"><strong>Mayor posición</strong><span>Identifica el instrumento con mayor peso en la cuenta.</span></div>
+          <div class="mini-card"><strong>Exposición tecnológica</strong><span>Suma la participación de QQQ y MSFT.</span></div>
+          <div class="mini-card"><strong>Capital invertido</strong><span>Muestra qué porcentaje del valor total está colocado en posiciones.</span></div>
+          <div class="mini-card"><strong>Desviación absoluta</strong><span>Suma las distancias entre pesos objetivo y reales.</span></div>
+          <div class="mini-card"><strong>Peor escenario</strong><span>Indica el escenario hipotético con mayor impacto negativo.</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Escenarios disponibles</h3>
+        <table class="tbl">
+          <tr><th>Escenario</th><th>Qué representa</th></tr>
+          <tr><td>Escenario base</td><td>No aplica un cambio adicional; sirve como referencia.</td></tr>
+          <tr><td>Corrección tecnológica</td><td>Caída de valuaciones tecnológicas y empresas relacionadas con IA.</td></tr>
+          <tr><td>Inflación persistente</td><td>Presión sobre crecimiento y posible fortalecimiento del oro.</td></tr>
+          <tr><td>Recesión</td><td>Contracción de utilidades, crédito y consumo, con demanda defensiva de oro.</td></tr>
+          <tr><td>Tasas al alza</td><td>Presión sobre valuaciones y oro, con posible apoyo al margen financiero.</td></tr>
+        </table>
+        <div class="note"><strong>Interpretación:</strong> los escenarios aplican variaciones hipotéticas a los activos de la cartera. Son ejercicios de sensibilidad y no pronósticos de mercado ni recomendaciones para operar.</div>
+      </div>
+    </section>
+
+    <section class="chapter" id="decisiones">
+      <h2><span class="num">8</span> Bitácora de decisiones</h2>
+      <p class="lead">La bitácora permite documentar la hipótesis que acompaña cada decisión y convertir la simulación en evidencia de análisis.</p>
+      <div class="card">
+        <h3>Campos disponibles</h3>
+        <table class="tbl">
+          <tr><th>Campo</th><th>Qué escribir</th></tr>
+          <tr><td>Activo</td><td>Instrumento al que se refiere la decisión.</td></tr>
+          <tr><td>Acción</td><td>Compra, venta o mantener.</td></tr>
+          <tr><td>Monto</td><td>Capital asociado con la decisión.</td></tr>
+          <tr><td>Escenario</td><td>Contexto considerado: base, recesión, inflación, tecnología o tasas.</td></tr>
+          <tr><td>Expectativa</td><td>Resultado que se espera observar.</td></tr>
+          <tr><td>Motivo</td><td>Razón basada en precio, riesgo, histórico, diversificación o acontecimientos.</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <h3>Flujo recomendado</h3>
+        <ol class="steps">
+          <li>Registra la decisión antes de ejecutar la operación, cuando sea posible.</li>
+          <li>Escribe una expectativa concreta, por ejemplo: “espero que QQQ tenga mayor volatilidad por sensibilidad a tasas”.</li>
+          <li>Explica el motivo y el riesgo asumido.</li>
+          <li>Después de observar el resultado, compara la hipótesis con el P&amp;L real.</li>
+          <li>Utiliza <strong>Exportar bitácora CSV</strong> para anexar las decisiones al trabajo.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="chapter" id="historial">
+      <h2><span class="num">9</span> Historial de operaciones</h2>
+      <p class="lead">La vista Historial concentra las operaciones ejecutadas y las operaciones Blitz cerradas.</p>
+      <div class="card">
+        <table class="tbl">
+          <tr><th>Registro</th><th>Información disponible</th></tr>
+          <tr><td>Órdenes</td><td>Fecha, símbolo, clase, lado, tipo, cantidad, precio de ejecución y estado.</td></tr>
+          <tr><td>Estados</td><td>Ejecutada, pendiente, cancelada o rechazada.</td></tr>
+          <tr><td>Blitz</td><td>Fecha, símbolo, dirección, duración, inversión, apertura, cierre, P/L y resultado.</td></tr>
+          <tr><td>Filtros</td><td>Permiten consultar órdenes por estado.</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section class="chapter" id="reportes">
+      <h2><span class="num">10</span> Informe PDF y DOCX</h2>
+      <p class="lead">El informe se genera desde Historial y puede descargarse en PDF para entregar una versión cerrada o en DOCX para editar y personalizar el documento.</p>
+      <div class="card">
+        <h3>Cómo generar el informe</h3>
+        <ol class="steps">
+          <li>Abre la vista <strong>Historial</strong>.</li>
+          <li>Expande <strong>Informe de entrega de inversiones</strong>.</li>
+          <li>Completa título, universidad, curso, catedrático, sección, nombre y carné.</li>
+          <li>Presiona <strong>Descargar informe PDF</strong> para obtener una versión lista para imprimir o compartir.</li>
+          <li>Presiona <strong>Descargar informe DOCX</strong> para obtener una versión editable en Microsoft Word o una aplicación compatible.</li>
+          <li>Revisa que los datos del portafolio, la bitácora y las conclusiones sean correctos antes de entregar.</li>
+        </ol>
+      </div>
+      <div class="grid2">
+        <div class="card"><h3>PDF</h3><p style="color:var(--text-soft); font-size:14px; margin:0;">Conserva el diseño paginado, las tablas, la portada y la estructura final. Es el formato recomendado cuando el documento ya está revisado.</p></div>
+        <div class="card"><h3>DOCX</h3><p style="color:var(--text-soft); font-size:14px; margin:0;">Permite editar texto, agregar observaciones del estudiante y adaptar el formato en Word o software compatible antes de entregar.</p></div>
+      </div>
+      <div class="card">
+        <h3>Contenido del informe</h3>
+        <div class="checklist">
+          <div>Resumen ejecutivo y KPIs.</div>
+          <div>Distribución completa de US$50,000.</div>
+          <div>Precio de referencia por activo.</div>
+          <div>Rendimiento esperado académico.</div>
+          <div>Comportamiento histórico disponible.</div>
+          <div>Nivel de riesgo por inversión.</div>
+          <div>Justificación de cada selección.</div>
+          <div>Noticias y factores de mercado.</div>
+          <div>Matriz de cumplimiento de la consigna.</div>
+          <div>Asignación por clase de activo.</div>
+          <div>P&amp;L por posición y hallazgos.</div>
+          <div>Riesgo y concentración.</div>
+          <div>Comparación objetivo versus real.</div>
+          <div>Escenarios de sensibilidad.</div>
+          <div>Bitácora de decisiones.</div>
+          <div>Historial de órdenes y Blitz.</div>
+          <div>Fuentes consultadas.</div>
+          <div>Limitaciones de la simulación.</div>
+        </div>
+      </div>
+      <div class="note"><strong>Revisión final:</strong> el PDF y el DOCX utilizan los datos actuales del portafolio al momento de generarse. Si se realizan nuevas operaciones después de descargar cualquiera de los archivos, será necesario generar una nueva copia para mantener la información sincronizada.</div>
+    </section>
+
+    <section class="chapter" id="persistencia">
+      <h2><span class="num">11</span> Guardado, exportación y reinicio</h2>
+      <p class="lead">La persistencia depende del modo de acceso y del navegador utilizado.</p>
+      <div class="card">
+        <table class="tbl">
+          <tr><th>Función</th><th>Comportamiento</th></tr>
+          <tr><td>Guardado local</td><td>Conserva portafolio, posiciones, órdenes, Blitz y bitácora en el navegador actual.</td></tr>
+          <tr><td>Modo institución</td><td>Sincroniza el portafolio con la cuenta institucional configurada.</td></tr>
+          <tr><td>Exportar CSV</td><td>Descarga la bitácora de decisiones para anexarla o analizarla externamente.</td></tr>
+          <tr><td>Reiniciar</td><td>Borra la simulación actual y carga nuevamente la cartera académica de US$50,000.</td></tr>
+        </table>
+      </div>
+      <div class="note"><strong>Precaución:</strong> antes de reiniciar, descarga el informe PDF y exporta la bitácora si necesitas conservar evidencia de la simulación actual.</div>
+    </section>
+
+    <section class="chapter" id="consejos">
+      <h2><span class="num">12</span> Buenas prácticas académicas</h2>
+      <div class="card">
+        <ul class="bullets">
+          <li><strong>Lee la distribución inicial:</strong> identifica qué parte del capital corresponde a ETF, acciones y oro antes de modificarla.</li>
+          <li><strong>Justifica cada operación:</strong> relaciona la decisión con precio, histórico, rendimiento esperado, riesgo, diversificación o una noticia.</li>
+          <li><strong>Usa la bitácora:</strong> registra la expectativa antes de operar para poder evaluar posteriormente si la hipótesis fue correcta.</li>
+          <li><strong>Compara objetivo y realidad:</strong> observa si el movimiento de precios ha alterado la composición del portafolio.</li>
+          <li><strong>Prueba escenarios:</strong> analiza cómo cambiaría el valor de la cuenta bajo condiciones adversas.</li>
+          <li><strong>Revisa las limitaciones:</strong> recuerda que el motor de precios es simulado y no incluye todos los elementos del mercado real.</li>
+          <li><strong>Documenta el cierre:</strong> genera el PDF y exporta el CSV antes de reiniciar o modificar significativamente la cuenta.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Lista de comprobación para la entrega</h3>
+        <div class="checklist">
+          <div>Capital inicial identificado.</div>
+          <div>Inversiones seleccionadas.</div>
+          <div>Monto y porcentaje por inversión.</div>
+          <div>Justificación de cada activo.</div>
+          <div>Riesgo de cada inversión.</div>
+          <div>Diversificación explicada.</div>
+          <div>Factores o noticias considerados.</div>
+          <div>Bitácora exportada, si se utilizó.</div>
+          <div>Informe PDF descargado.</div>
+          <div>Limitaciones revisadas.</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      BolsaGT — Simulador educativo de inversiones. Todos los precios, resultados y escenarios son simulados. La plataforma no constituye asesoría financiera.
+    </footer>
+  </main>
+</div>
+</body>
+</html>
